@@ -1,0 +1,56 @@
+# =============================================================================
+# ai-news-agent — digest-only docker-compose
+# =============================================================================
+# Usage:
+#   cp .env.example .env   # then fill in OPENAI_API_KEY etc.
+#   docker compose build                          # build the image
+#   docker compose up -d                          # start daemon (cron mode)
+#   docker compose logs -f                        # tail digest.log
+#   docker compose --profile oneshot up digest    # run a single digest pass
+#
+# Stop:
+#   docker compose down
+# =============================================================================
+
+name: ai-news-digest
+
+services:
+  digest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ai-news-digest:latest
+    container_name: ai-news-digest
+    restart: unless-stopped
+    # Pull secrets from the host .env file (gitignored).
+    env_file:
+      - .env
+    environment:
+      # Cron expression interpreted by supercronic.
+      # Default = MON-FRI 03:00 UTC = 10:00 Asia/Bangkok.
+      DIGEST_CRON: "0 3 * * 1-5"
+      TZ: "Asia/Bangkok"
+      RUN_ONCE: "0"
+    volumes:
+      # Persist digest logs on the host so they survive container restarts.
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD-SHELL", "node -e 'require(\"fs\").statSync(\"/app/package.json\")'"]
+      interval: 1h
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    profiles:
+      - cron
+
+  digest-once:
+    extends:
+      service: digest
+    container_name: ai-news-digest-once
+    restart: "no"
+    environment:
+      RUN_ONCE: "1"
+      DIGEST_CRON: "0 3 * * 1-5"
+      TZ: "Asia/Bangkok"
+    profiles:
+      - oneshot

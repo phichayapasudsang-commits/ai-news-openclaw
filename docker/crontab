@@ -1,0 +1,8 @@
+# ai-news-agent digest schedule (read by supercronic).
+#
+# Default: every weekday at 10:00 Asia/Bangkok (= 03:00 UTC since TZ=Asia/Bangkok).
+# Bangkok is UTC+7 year-round (no DST), so 10:00 ICT = 03:00 UTC.
+# Override via DIGEST_CRON env var; the entrypoint substitutes it on startup.
+#
+# Cron format: minute hour day-of-month month day-of-week command
+__DIGEST_CRON__ cd /app && node dist/digest.js >> /app/logs/digest.log 2>&1
