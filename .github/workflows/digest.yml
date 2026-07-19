@@ -77,10 +77,10 @@ jobs:
       - name: Run digest
         run: node dist/digest.js
         env:
-          OPENAI_API_KEY: *** secrets.OPENAI_API_KEY }}
-          OPENAI_API_BASE: *** secrets.OPENAI_API_BASE }}
-          OPENAI_MODEL_NAME: *** secrets.OPENAI_MODEL_NAME }}
-          FIRECRAWL_API_KEY: *** secrets.FIRECRAWL_API_KEY }}
-          SUPABASE_URL: *** secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: *** secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          TOPIC: *** github.event.inputs.topic }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_BASE: ${{ secrets.OPENAI_API_BASE }}
+          OPENAI_MODEL_NAME: ${{ secrets.OPENAI_MODEL_NAME }}
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TOPIC: ${{ github.event.inputs.topic }}
