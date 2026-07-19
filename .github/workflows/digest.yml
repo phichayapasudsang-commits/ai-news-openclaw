@@ -1,0 +1,86 @@
+# =============================================================================
+# ai-news-agent - daily digest via GitHub Actions
+# =============================================================================
+# Runs `node dist/digest.js` on a cron schedule (03:00 UTC = 10:00 Asia/Bangkok,
+# MON-FRI). No VM required.
+#
+# Free quota: 2,000 min/month for private repos. This workflow uses ~3 min/run
+# x 22 business days = ~66 min/month.
+#
+# Setup:
+#   1. Push this file to GitHub (already done).
+#   2. Go to https://github.com/phichayapasudsang-commits/ai-news-openclaw/settings/secrets/actions
+#      and add these secrets (Repository secrets, not Environment):
+#        OPENAI_API_KEY, OPENAI_API_BASE, OPENAI_MODEL_NAME,
+#        FIRECRAWL_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+#   3. (Optional) Run "Actions" tab -> "Daily digest" -> "Run workflow" to test
+#      immediately. Each run writes log output you can inspect.
+#
+# Why not run on a free VM?
+#   Oracle Cloud Always Free ARM is currently out of capacity in every region
+#   for new accounts. GitHub Actions is the zero-cost alternative.
+# =============================================================================
+
+name: Daily digest
+
+on:
+  schedule:
+    # 03:00 UTC = 10:00 Asia/Bangkok (UTC+7, no DST)
+    # 1-5 = MON-FRI (both day-of-week interpretations work in GitHub)
+    - cron: '0 3 * * 1-5'
+  workflow_dispatch: # allow manual runs from the Actions tab
+    inputs:
+      topic:
+        description: 'Override TOPIC env var (optional)'
+        required: false
+        default: ''
+
+# Cancel an in-progress run if a new one is triggered (e.g. re-running manually
+# while the scheduled run is still going).
+concurrency:
+  group: digest
+  cancel-in-progress: true
+
+jobs:
+  digest:
+    name: Run daily digest
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      # Disable embedder network calls if the OpenAI key doesn't support them.
+      # This matches the local .env default.
+      FORCE_STUB_EMBEDDINGS: '1'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies (skip optionalDependencies like openclaw)
+        run: npm ci --omit=optional
+
+      - name: Install dev deps for TypeScript build
+        run: npm install --no-save typescript@5.5.4 tsx@4.19.0
+
+      - name: Install Playwright Chromium + system libs
+        run: npx playwright install --with-deps chromium
+
+      - name: Type-check + compile to dist/
+        run: npm run build
+
+      - name: Run digest
+        run: node dist/digest.js
+        env:
+          OPENAI_API_KEY: *** secrets.OPENAI_API_KEY }}
+          OPENAI_API_BASE: *** secrets.OPENAI_API_BASE }}
+          OPENAI_MODEL_NAME: *** secrets.OPENAI_MODEL_NAME }}
+          FIRECRAWL_API_KEY: *** secrets.FIRECRAWL_API_KEY }}
+          SUPABASE_URL: *** secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: *** secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TOPIC: *** github.event.inputs.topic }}
