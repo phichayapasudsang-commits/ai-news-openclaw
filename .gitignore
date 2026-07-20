@@ -35,8 +35,6 @@ coverage/
 .cache/
 .turbo/
 
-# Frontend (out of scope for digest-only deploy)
-web/
 
 # OS metadata
 ehthumbs.db
