@@ -27,7 +27,7 @@ on:
   schedule:
     # 03:00 UTC = 10:00 Asia/Bangkok (UTC+7, no DST)
     # 1-5 = MON-FRI (both day-of-week interpretations work in GitHub)
-    - cron: '0 3 * * 1-5'
+    - cron: '0 0 * * 1-5'
   workflow_dispatch: # allow manual runs from the Actions tab
     inputs:
       topic:
