@@ -88,6 +88,107 @@ export interface DedupedArticle extends ScrapedArticle {}
 
 export interface FinalArticle extends SupabaseArticleRow {}
 
+// ===============================================================
+// Rich-body packers / shared helpers
+// ===============================================================
+//
+// The DB schema is intentionally flat: title_en/th, summary_en/th,
+// body_en/th (TEXT) plus image_url. The Analyst LLM now returns a
+// richer schema (executive_summary_*, key_highlights_*, trends_overview_*)
+// which we pack into body_en / body_th as a multi-section text that the
+// dashboard can split on. See dashboard src/lib/data.ts:parseRichBody().
+
+/** Return the first non-empty string among the inputs (treats "" / null / undefined as empty). */
+function firstNonEmpty(...candidates: unknown[]): string {
+  for (const c of candidates) {
+    if (typeof c === "string" && c.trim().length > 0) return c.trim();
+  }
+  return "";
+}
+
+/** String with default. Treats null / undefined / non-string as `fallback`. */
+function stringOrDefault(v: unknown, fallback: string): string {
+  return typeof v === "string" ? v : fallback;
+}
+
+/** Normalise published_date to "YYYY-MM-DD" or "" (legacy column is NOT NULL-able). */
+function normaliseDate(v: unknown): string {
+  const s = stringOrDefault(v, "").trim();
+  if (!s || s.toLowerCase() === "null" || s.toLowerCase() === "n/a") return "";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  const t = Date.parse(s);
+  if (Number.isNaN(t)) return "";
+  return new Date(t).toISOString().slice(0, 10);
+}
+
+/** Coerce LLM array fields to string[], dropping blanks / non-strings. */
+function arrayOfStrings(v: unknown): string[] {
+  if (!Array.isArray(v)) return [];
+  return v
+    .filter((x): x is string => typeof x === "string")
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
+}
+
+/**
+ * Pack the rich LLM schema into body_en / body_th sections the dashboard
+ * parses. Falls back to whatever body_en/body_th the LLM already produced
+ * when the rich fields are absent.
+ *
+ * Output format (both languages):
+ *   [EXECUTIVE]
+ *   <2-3 sentence paragraph>
+ *
+ *   [HIGHLIGHTS]
+ *   - bullet
+ *   - bullet
+ *
+ *   [TRENDS]
+ *   - macro trend
+ *   - macro trend
+ *   - macro trend
+ */
+function packRichBody(row: Record<string, unknown>): { bodyEn: string; bodyTh: string } {
+  const block = (
+    exec: string,
+    highlights: string[],
+    trends: string[],
+    fallback: string,
+  ): string => {
+    if (!exec && highlights.length === 0 && trends.length === 0) {
+      return fallback.trim();
+    }
+    const lines: string[] = [];
+    lines.push("[EXECUTIVE]");
+    lines.push(exec.trim());
+    lines.push("");
+    if (highlights.length > 0) {
+      lines.push("[HIGHLIGHTS]");
+      for (const h of highlights) lines.push(`- ${h.trim()}`);
+      lines.push("");
+    }
+    if (trends.length > 0) {
+      lines.push("[TRENDS]");
+      for (const t of trends) lines.push(`- ${t.trim()}`);
+    }
+    return lines.join("\n");
+  };
+  return {
+    bodyEn: block(
+      stringOrDefault(row.executive_summary_en, ""),
+      arrayOfStrings(row.key_highlights_en),
+      arrayOfStrings(row.trends_overview_en),
+      stringOrDefault(row.body_en, ""),
+    ),
+    bodyTh: block(
+      stringOrDefault(row.executive_summary_th, ""),
+      arrayOfStrings(row.key_highlights_th),
+      arrayOfStrings(row.trends_overview_th),
+      stringOrDefault(row.body_th, ""),
+    ),
+  };
+}
+
 /**
  * News source definition.
  *
@@ -669,40 +770,47 @@ a STRICT JSON array (no markdown fences, no commentary) with one
 object per article using EXACTLY these keys:
 
   {
-    "title_en":        string  - original English title,
-    "title_th":        string  - Thai translation of the title,
-    "summary_en":      string  - 2-3 sentence English summary (<= 60 words),
-    "summary_th":      string  - 2-3 sentence Thai summary (<= 60 words),
-    "body_en":         string  - DETAILED English summary, 3-5 bullet points
-                                  covering the full content. Each bullet on
-                                  its own line starting with "- ". Total
-                                  80-160 words. The reader should understand
-                                  the article WITHOUT clicking through.
-    "body_th":         string  - DETAILED Thai summary, same structure as body_en.
-                                  Each bullet starts with "- ". Natural Thai,
-                                  not literal translation.
-    "category":        string  - COPY VERBATIM from the input article's category,
-    "original_url":    string  - URL from the input,
-    "image_url":       string  - best image URL or "" if none,
-    "published_date":  string  - ISO-8601 date (YYYY-MM-DD) if known
+    "title_en":                string  - news-headline style, present tense, active voice (<= 90 chars),
+    "title_th":                string  - natural Thai news headline (<= 90 chars),
+    "summary_en":              string  - ONE-sentence lede: the single most newsworthy fact (<= 140 chars),
+    "summary_th":              string  - ONE-sentence Thai lede (<= 140 chars),
+    "executive_summary_en":    string  - 2-3 sentences (180-280 chars). 5W1H paragraph. Inverted pyramid.
+    "executive_summary_th":    string  - 2-3 sentences in natural Thai, same structure.
+    "key_highlights_en":       [string]  - 3-5 concrete fact bullets. Each bullet stands alone.
+    "key_highlights_th":       [string]  - 3-5 Thai concrete fact bullets.
+    "trends_overview_en":      [string]  - EXACTLY 3 macro-pattern bullets (not restating highlights).
+    "trends_overview_th":      [string]  - EXACTLY 3 Thai macro-pattern bullets.
+    "category":                string  - COPY VERBATIM from the input article's category,
+    "original_url":            string  - URL from the input,
+    "image_url":               string  - copy from input's first non-empty image URL, or "" if none,
+    "published_date":          string  - ISO-8601 date (YYYY-MM-DD) or "" if unknown
   }
+
+The pipeline packages executive_summary_*, key_highlights_* and trends_overview_*
+into a multi-section body string before inserting into the DB. You only need
+to return the JSON - the packaging is automatic.
 
 Rules:
   - Output a single top-level JSON array. NO prose, NO markdown fences.
   - The 'category' field MUST be copied verbatim from the input - do
     NOT re-classify or invent a new category.
   - If an article lacks a usable date, set published_date to "".
-  - If no image is available, set image_url to "" (not null).
-  - Keep summaries (summary_en/summary_th) under 60 words each.
-  - body_en / body_th should give the reader a real understanding of:
-      * WHO is involved (company / research team / author)
-      * WHAT was done / discovered / announced
-      * WHY it matters (impact, novelty)
-      * HOW it works (method / architecture, when relevant)
-      * KEY results / numbers / benchmarks, when available
-  - Do not invent facts. If the source does not mention a detail,
-    omit that bullet rather than guess.
-  - Translation must be natural Thai, not literal word-for-word.
+  - If no image is available in the input, set image_url to "" (not null).
+  - Titles: news-headline style. Active voice. No clickbait.
+  - summary_*: ONE single most newsworthy fact. Numbers/names welcome.
+  - executive_summary_*: WHO/WHAT/WHEN/WHY/HOW paragraph.
+    Bad: "This article discusses..." Good: "Anthropic shipped MCP 1.0 on July 22..."
+  - key_highlights_*: concrete facts (names, versions, numbers, dates).
+    Each bullet must stand alone (no "see above").
+  - trends_overview_*: macro patterns. NOT restating highlights.
+    Bad trend: "MCP supports OAuth" (that's a highlight)
+    Good trend: "Vendor-neutral agent protocols are converging on OAuth-native auth"
+    Exactly 3 items.
+  - Do not invent facts. If the source does not mention a detail, omit
+    that bullet rather than guess.
+  - Translation must be natural Thai, not literal word-for-word. Preserve
+    technical proper nouns in English (MCP, Claude, OpenAI, SDK).
+  - Acronyms in EN text stay UPPERCASE.
 `.trim(),
 
   async run({ articles }) {
@@ -759,7 +867,29 @@ Return ONLY the strict JSON array described in your system prompt.
       );
       return [];
     }
-    return arr as FinalArticle[];
+
+    // Pack the new rich schema (executive_summary_* / key_highlights_* /
+    // trends_overview_*) into the legacy body_en / body_th text columns so
+    // the DB schema stays unchanged. Falls back to the LLM's own body_*
+    // when the new fields are absent (older prompt / different model).
+    return (arr as Record<string, unknown>[]).map((row, i) => {
+      const input = articles[i] ?? articles[0];
+      const bestImage = firstNonEmpty(row.image_url, input?.imageUrls?.[0]);
+      const packed = packRichBody(row);
+      return {
+        ...(row as Partial<FinalArticle>),
+        title_en:       stringOrDefault(row.title_en, input?.title ?? ""),
+        title_th:       stringOrDefault(row.title_th, ""),
+        summary_en:     stringOrDefault(row.summary_en, ""),
+        summary_th:     stringOrDefault(row.summary_th, ""),
+        body_en:        packed.bodyEn,
+        body_th:        packed.bodyTh,
+        category:       stringOrDefault(row.category, input?.category ?? "Research"),
+        original_url:   stringOrDefault(row.original_url, input?.url ?? ""),
+        image_url:      bestImage,
+        published_date: normaliseDate(row.published_date),
+      } as FinalArticle;
+    });
   },
 };
 
@@ -816,6 +946,16 @@ ${THAI_POLISH_RULES.map((r) => `       - ${r}`).join("\n")}
   3. PRESERVE
      - title_en, summary_en, body_en: pass through unchanged.
      - category, original_url, image_url, published_date: pass through unchanged.
+
+  4. RESPECT rich-body sections in body_th
+     body_en / body_th may contain the section markers [EXECUTIVE],
+     [HIGHLIGHTS], [TRENDS] (each on its own line, blank-line separated).
+     When trimming body_th, you MUST:
+       - Keep the section markers intact.
+       - Trim INSIDE each section, never across section boundaries.
+       - Prefer dropping a trailing bullet from [TRENDS] (keep >= 2)
+         or a bullet from [HIGHLIGHTS] (keep >= 3) over cutting prose.
+       - Never truncate the [EXECUTIVE] paragraph mid-sentence.
 
 Output a STRICT JSON object (no fences) of shape:
   {
@@ -894,8 +1034,10 @@ Return ONLY the strict JSON object described in your system prompt.
       );
       // body_th may be missing if Analyst didn't produce it; fall back
       // gracefully so we still insert the row.
+      // Use hardTrimRichBody so [EXECUTIVE]/[HIGHLIGHTS]/[TRENDS] section
+      // markers survive the trim pass (dashboard parser depends on them).
       const body_th = row.body_th
-        ? hardTrimSummary(row.body_th, DEFAULT_BODY_MAX_CHARS, DEFAULT_BODY_MAX_WORDS)
+        ? hardTrimRichBody(row.body_th, DEFAULT_BODY_MAX_CHARS, DEFAULT_BODY_MAX_WORDS)
         : original.body_th ?? "";
       const body_en = row.body_en ?? original.body_en ?? "";
       return {
@@ -940,7 +1082,7 @@ function localTrimFallback(
       DEFAULT_SUMMARY_MAX_WORDS
     ),
     body_en: row.body_en ?? "",
-    body_th: hardTrimSummary(
+    body_th: hardTrimRichBody(
       row.body_th ?? "",
       DEFAULT_BODY_MAX_CHARS,
       DEFAULT_BODY_MAX_WORDS
@@ -988,8 +1130,138 @@ function hardTrimSummary(text: string, maxChars: number, maxWords: number): stri
   return out;
 }
 
+/**
+ * Trim a rich body that contains [EXECUTIVE] / [HIGHLIGHTS] / [TRENDS]
+ * section markers. Unlike hardTrimSummary, this:
+ *   - Trims INSIDE each section, never across section boundaries.
+ *   - Keeps section markers intact so the dashboard parser still works.
+ *   - When over budget, drops trailing bullets first (TRENDS keep >= 2,
+ *     HIGHLIGHTS keep >= 3) before trimming prose.
+ *
+ * If the body has no recognised section markers, falls back to
+ * hardTrimSummary() so old-shape bodies still get a sensible trim.
+ */
+function hardTrimRichBody(
+  text: string,
+  maxChars: number,
+  maxWords: number,
+): string {
+  if (!text) return "";
+  // Fast path: body is already small.
+  if (text.length <= maxChars && text.split(/\s+/).filter(Boolean).length <= maxWords) {
+    return text;
+  }
+
+  const hasSections = /\[(EXECUTIVE|HIGHLIGHTS|TRENDS)\]/i.test(text);
+  if (!hasSections) return hardTrimSummary(text, maxChars, maxWords);
+
+  // Split body into ordered sections, preserving marker text.
+  const lines = text.split(/\r?\n/);
+  type Section = { marker: string | null; body: string[] };
+  const sections: Section[] = [];
+  let current: Section = { marker: null, body: [] };
+  for (const line of lines) {
+    const m = line.match(/^\[(EXECUTIVE|HIGHLIGHTS|TRENDS)\]\s*$/i);
+    if (m) {
+      sections.push(current);
+      current = { marker: m[1].toUpperCase(), body: [] };
+    } else {
+      current.body.push(line);
+    }
+  }
+  sections.push(current);
+
+  // Drop trailing blank-only section if present (clean reconstruction).
+  while (sections.length && sections[sections.length - 1].body.every((l) => l.trim() === "")) {
+    sections.pop();
+  }
+
+  // Trim each section progressively:
+  //   1. Drop bullets from [TRENDS] (keep >= 2)
+  //   2. Drop bullets from [HIGHLIGHTS] (keep >= 3)
+  //   3. hardTrim the [EXECUTIVE] prose (keep first paragraph)
+  //   4. hardTrim remaining prose in any other section
+  const dropBulletFrom = (sec: Section): Section => {
+    if (!sec.body.length) return sec;
+    // Find last non-empty "- ..." line, drop it, keep surrounding blanks intact.
+    for (let i = sec.body.length - 1; i >= 0; i--) {
+      if (/^\s*-\s+/.test(sec.body[i])) {
+        sec.body.splice(i, 1);
+        return sec;
+      }
+    }
+    return sec;
+  };
+
+  const sectionsByMarker = new Map(sections.map((s) => [s.marker ?? "", s]));
+
+  // Keep trimming until we fit the cap. Loop is bounded: each pass drops a
+  // bullet or shaves chars, both strictly decrease length.
+  let safety = 100;
+  while (safety-- > 0) {
+    const joined = joinSections(sections);
+    if (joined.length <= maxChars && joined.split(/\s+/).filter(Boolean).length <= maxWords) break;
+
+    const trends = sectionsByMarker.get("TRENDS");
+    const highlights = sectionsByMarker.get("HIGHLIGHTS");
+
+    if (trends && countBullets(trends.body) > 2) {
+      dropBulletFrom(trends);
+      continue;
+    }
+    if (highlights && countBullets(highlights.body) > 3) {
+      dropBulletFrom(highlights);
+      continue;
+    }
+    const exec = sectionsByMarker.get("EXECUTIVE");
+    if (exec) {
+      // Trim the EXECUTIVE paragraph (everything between marker and next
+      // blank line) using hardTrim on its non-empty joined lines.
+      const prose = exec.body.map((l) => l.trim()).filter(Boolean).join(" ");
+      if (prose.length > 240) {
+        const trimmed = hardTrim(prose, 240);
+        exec.body = [trimmed];
+        continue;
+      }
+    }
+    // Last resort: hardTrim each remaining section's prose individually.
+    let changed = false;
+    for (const sec of sections) {
+      if (!sec.body.length) continue;
+      const prose = sec.body.map((l) => l.trim()).filter(Boolean).join(" ");
+      if (prose.length > 320) {
+        sec.body = [hardTrim(prose, 320)];
+        changed = true;
+        break;
+      }
+    }
+    if (!changed) break;
+  }
+
+  return joinSections(sections);
+}
+
+/** Reconstruct a multi-section body from parsed sections. */
+function joinSections(sections: { marker: string | null; body: string[] }[]): string {
+  const out: string[] = [];
+  sections.forEach((sec, idx) => {
+    if (sec.marker) {
+      out.push(`[${sec.marker}]`);
+    }
+    out.push(...sec.body);
+    // Blank line between sections (but not after the last one if it ends cleanly).
+    if (idx < sections.length - 1) out.push("");
+  });
+  return out.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd();
+}
+
+/** Count "- ..." bullets in a section body (excluding indented sub-bullets). */
+function countBullets(lines: string[]): number {
+  return lines.filter((l) => /^\s*-\s+/.test(l)).length;
+}
+
 /** Exported for unit testing only. */
-export const __test__ = { hardTrim, hardTrimSummary, extractJsonPayload };
+export const __test__ = { hardTrim, hardTrimSummary, hardTrimRichBody, extractJsonPayload };
 
 // ===============================================================
 // AGENT 5 - QA
