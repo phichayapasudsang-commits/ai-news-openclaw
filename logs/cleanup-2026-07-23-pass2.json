@@ -1,0 +1,73 @@
+{
+  "summary": {
+    "cleanup_date": "2026-07-23T06:32:39.673Z",
+    "cutoff": "2026-07-20",
+    "retention_days": 3,
+    "total": 7,
+    "by_source": {
+      "huggingface.co": 6,
+      "www.therundown.ai": 1
+    },
+    "by_year": {
+      "2026": 7
+    }
+  },
+  "rows": [
+    {
+      "id": 300,
+      "title_en": "HOMIE: Human-object Centric Video Personalization via Multimodal Intelligent Enhancement",
+      "source": "huggingface.co",
+      "published_date": "2026-07-20",
+      "inserted_at": "2026-07-21T06:04:48.213839+00:00",
+      "image_url": "https://cdn-uploads.huggingface.co/production/uploads/6629d7c9fa14eaccf07d8633/8pEwdIfozfPTxLFvH28sB.mp4"
+    },
+    {
+      "id": 302,
+      "title_en": "RynnBrain 1.1: Towards More Capable and Generalizable Embodied Foundation Model",
+      "source": "huggingface.co",
+      "published_date": "2026-07-20",
+      "inserted_at": "2026-07-21T06:05:18.441082+00:00",
+      "image_url": null
+    },
+    {
+      "id": 303,
+      "title_en": "LLM-as-a-Coach: Experiential Learning for Non-Verifiable Tasks",
+      "source": "huggingface.co",
+      "published_date": "2026-07-20",
+      "inserted_at": "2026-07-21T06:05:31.824794+00:00",
+      "image_url": null
+    },
+    {
+      "id": 307,
+      "title_en": "Anthropic's Fable survives the subscription axe PLUS: Deploy a mini-SaaS in 10 minutes with ChatGPT Sites",
+      "source": "www.therundown.ai",
+      "published_date": "2026-07-20",
+      "inserted_at": "2026-07-21T06:06:46.459502+00:00",
+      "image_url": null
+    },
+    {
+      "id": 333,
+      "title_en": "AlayaWorld: Interactive Long-Horizon World Modeling -- Full Technical Report",
+      "source": "huggingface.co",
+      "published_date": "2026-07-20",
+      "inserted_at": "2026-07-22T08:59:27.480308+00:00",
+      "image_url": null
+    },
+    {
+      "id": 335,
+      "title_en": "SciForma: Structure-Faithful Generation of Scientific Diagrams",
+      "source": "huggingface.co",
+      "published_date": "2026-07-20",
+      "inserted_at": "2026-07-22T09:00:00.879505+00:00",
+      "image_url": null
+    },
+    {
+      "id": 357,
+      "title_en": "Introducing Cosmos 3 Edge",
+      "source": "huggingface.co",
+      "published_date": "2026-07-20",
+      "inserted_at": "2026-07-22T09:08:18.055625+00:00",
+      "image_url": null
+    }
+  ]
+}

@@ -1,0 +1,687 @@
+{
+  "summary": {
+    "cleanup_date": "2026-07-23T06:30:54.578Z",
+    "cutoff": "2026-07-20",
+    "retention_days": 3,
+    "total": 82,
+    "by_source": {
+      "www.anthropic.com": 2,
+      "huggingface.co": 50,
+      "azure.microsoft.com": 1,
+      "winbuzzer.com": 1,
+      "www.cnbc.com": 1,
+      "paperswithcode.co": 8,
+      "www.cnn.com": 1,
+      "news.mit.edu": 1,
+      "www.microsoft.com": 1,
+      "www.therundown.ai": 12,
+      "aiagentsdirectory.com": 1,
+      "agentic.ai": 1,
+      "aiweekly.co": 1,
+      "arxiv.org": 1
+    },
+    "by_year": {
+      "2024": 1,
+      "2025": 6,
+      "2026": 75
+    }
+  },
+  "rows": [
+    {
+      "id": 20,
+      "title_en": "Introducing the Model Context Protocol",
+      "source": "www.anthropic.com",
+      "published_date": "2024-11-25",
+      "inserted_at": "2026-07-14T04:10:39.967298+00:00",
+      "image_url": null
+    },
+    {
+      "id": 198,
+      "title_en": "KV Caching Explained: Optimizing Transformer Inference Efficiency",
+      "source": "huggingface.co",
+      "published_date": "2025-01-30",
+      "inserted_at": "2026-07-16T03:11:23.07601+00:00",
+      "image_url": null
+    },
+    {
+      "id": 272,
+      "title_en": "Loop the Loopies!",
+      "source": "huggingface.co",
+      "published_date": "2025-07-17",
+      "inserted_at": "2026-07-20T06:24:42.041667+00:00",
+      "image_url": null
+    },
+    {
+      "id": 364,
+      "title_en": "SeededGrasp Decouples VLM Reasoning from Grasp Generation for Multi-Embodiment Robots",
+      "source": "huggingface.co",
+      "published_date": "2025-07-22",
+      "inserted_at": "2026-07-23T02:47:11.403971+00:00",
+      "image_url": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2607.20207/gradient.png"
+    },
+    {
+      "id": 7,
+      "title_en": "Introducing Microsoft Agent Framework",
+      "source": "azure.microsoft.com",
+      "published_date": "2025-10-01",
+      "inserted_at": "2026-07-14T03:23:36.730669+00:00",
+      "image_url": null
+    },
+    {
+      "id": 9,
+      "title_en": "Microsoft Unveils Agent Framework to Unify AI Development",
+      "source": "winbuzzer.com",
+      "published_date": "2025-10-02",
+      "inserted_at": "2026-07-14T03:24:12.849048+00:00",
+      "image_url": null
+    },
+    {
+      "id": 3,
+      "title_en": "Donating the Model Context Protocol and establishing the Agentic AI Foundation",
+      "source": "www.anthropic.com",
+      "published_date": "2025-12-09",
+      "inserted_at": "2026-07-14T03:22:39.605938+00:00",
+      "image_url": null
+    },
+    {
+      "id": 10,
+      "title_en": "AI memory is sold out, causing an unprecedented surge in prices",
+      "source": "www.cnbc.com",
+      "published_date": "2026-01-10",
+      "inserted_at": "2026-07-14T03:24:32.546005+00:00",
+      "image_url": null
+    },
+    {
+      "id": 105,
+      "title_en": "Qwen3-TTS Technical Report",
+      "source": "paperswithcode.co",
+      "published_date": "2026-01-22",
+      "inserted_at": "2026-07-14T08:43:29.612732+00:00",
+      "image_url": null
+    },
+    {
+      "id": 193,
+      "title_en": "VIBEVOICE-ASR Technical Report",
+      "source": "paperswithcode.co",
+      "published_date": "2026-01-26",
+      "inserted_at": "2026-07-16T03:09:10.387459+00:00",
+      "image_url": null
+    },
+    {
+      "id": 322,
+      "title_en": "ACE-Step 1.5: Pushing the Boundaries of Open-Source Music Generation",
+      "source": "paperswithcode.co",
+      "published_date": "2026-01-31",
+      "inserted_at": "2026-07-21T06:12:44.346545+00:00",
+      "image_url": null
+    },
+    {
+      "id": 104,
+      "title_en": "DFlash: Block Diffusion for Flash Speculative Decoding",
+      "source": "paperswithcode.co",
+      "published_date": "2026-02-05",
+      "inserted_at": "2026-07-14T08:43:01.305756+00:00",
+      "image_url": null
+    },
+    {
+      "id": 12,
+      "title_en": "AI is gobbling up the world's memory chips, sending smartphone prices to record highs, report says",
+      "source": "www.cnn.com",
+      "published_date": "2026-02-27",
+      "inserted_at": "2026-07-14T03:25:17.859408+00:00",
+      "image_url": null
+    },
+    {
+      "id": 101,
+      "title_en": "HiDream-O1-Image: A Natively Unified Image Generative Foundation Model with Pixel-level Unified Transformer",
+      "source": "paperswithcode.co",
+      "published_date": "2026-05-11",
+      "inserted_at": "2026-07-14T08:41:26.169331+00:00",
+      "image_url": null
+    },
+    {
+      "id": 129,
+      "title_en": "Bernini: Latent Semantic Planning for Video Diffusion",
+      "source": "paperswithcode.co",
+      "published_date": "2026-05-21",
+      "inserted_at": "2026-07-15T02:56:50.430515+00:00",
+      "image_url": null
+    },
+    {
+      "id": 106,
+      "title_en": "JoyAI-VL-Interaction: Real-Time Vision-Language Interaction Intelligence",
+      "source": "paperswithcode.co",
+      "published_date": "2026-06-10",
+      "inserted_at": "2026-07-14T08:43:57.552413+00:00",
+      "image_url": null
+    },
+    {
+      "id": 127,
+      "title_en": "GLM-5.2: Built for Long-Horizon Tasks",
+      "source": "paperswithcode.co",
+      "published_date": "2026-06-16",
+      "inserted_at": "2026-07-15T02:55:51.181382+00:00",
+      "image_url": null
+    },
+    {
+      "id": 13,
+      "title_en": "Could AI tell you where you left your keys?",
+      "source": "news.mit.edu",
+      "published_date": "2026-06-17",
+      "inserted_at": "2026-07-14T03:25:32.947543+00:00",
+      "image_url": null
+    },
+    {
+      "id": 11,
+      "title_en": "Guarding AI memory",
+      "source": "www.microsoft.com",
+      "published_date": "2026-06-22",
+      "inserted_at": "2026-07-14T03:25:01.353933+00:00",
+      "image_url": null
+    },
+    {
+      "id": 78,
+      "title_en": "Anthropic's Fable returns worldwide PLUS: Use Google's Design.md tools to build better websites",
+      "source": "www.therundown.ai",
+      "published_date": "2026-07-02",
+      "inserted_at": "2026-07-14T08:11:00.234053+00:00",
+      "image_url": null
+    },
+    {
+      "id": 77,
+      "title_en": "Altman invites Washington inside the AI industry",
+      "source": "www.therundown.ai",
+      "published_date": "2026-07-03",
+      "inserted_at": "2026-07-14T08:10:41.690531+00:00",
+      "image_url": null
+    },
+    {
+      "id": 64,
+      "title_en": "After the party comes the free lunch: regularizing ColBERT models to enhance pooling capabilities and reduce index footprint",
+      "source": "huggingface.co",
+      "published_date": "2026-07-06",
+      "inserted_at": "2026-07-14T07:12:22.718869+00:00",
+      "image_url": null
+    },
+    {
+      "id": 76,
+      "title_en": "Meta sizes up GPT-5.5 with 'Watermelon'",
+      "source": "www.therundown.ai",
+      "published_date": "2026-07-06",
+      "inserted_at": "2026-07-14T08:10:25.792275+00:00",
+      "image_url": null
+    },
+    {
+      "id": 137,
+      "title_en": "Meet Cohere Transcribe Arabic",
+      "source": "huggingface.co",
+      "published_date": "2026-07-07",
+      "inserted_at": "2026-07-15T02:59:29.245643+00:00",
+      "image_url": null
+    },
+    {
+      "id": 172,
+      "title_en": "PolicyShiftGuard: Benchmarking and Improving Policy-Adaptive Image Guardrails",
+      "source": "huggingface.co",
+      "published_date": "2026-07-07",
+      "inserted_at": "2026-07-16T03:00:27.058809+00:00",
+      "image_url": null
+    },
+    {
+      "id": 75,
+      "title_en": "The part of Claude's brain nobody built",
+      "source": "www.therundown.ai",
+      "published_date": "2026-07-07",
+      "inserted_at": "2026-07-14T08:10:02.638588+00:00",
+      "image_url": null
+    },
+    {
+      "id": 61,
+      "title_en": "Distillation in 2026 (so far): which frontier models use it and how",
+      "source": "huggingface.co",
+      "published_date": "2026-07-08",
+      "inserted_at": "2026-07-14T07:11:27.773406+00:00",
+      "image_url": null
+    },
+    {
+      "id": 23,
+      "title_en": "AI Agents News Brief: OpenAI, Meta, Microsoft, Anthropic Updates - July 8, 2026",
+      "source": "aiagentsdirectory.com",
+      "published_date": "2026-07-08",
+      "inserted_at": "2026-07-14T04:11:39.389473+00:00",
+      "image_url": null
+    },
+    {
+      "id": 53,
+      "title_en": "Weak-to-Strong Generalization via Direct On-Policy Distillation",
+      "source": "huggingface.co",
+      "published_date": "2026-07-08",
+      "inserted_at": "2026-07-14T07:08:30.707402+00:00",
+      "image_url": null
+    },
+    {
+      "id": 74,
+      "title_en": "Meta climbs the AI image leaderboard",
+      "source": "www.therundown.ai",
+      "published_date": "2026-07-08",
+      "inserted_at": "2026-07-14T08:09:47.996443+00:00",
+      "image_url": null
+    },
+    {
+      "id": 73,
+      "title_en": "SpaceXAI, Cursor release the strongest Grok yet",
+      "source": "www.therundown.ai",
+      "published_date": "2026-07-09",
+      "inserted_at": "2026-07-14T08:09:34.669349+00:00",
+      "image_url": null
+    },
+    {
+      "id": 72,
+      "title_en": "OpenAI sends GPT-5.6 to Work PLUS: Use 60% less Fable tokens with this orchestrator setup",
+      "source": "www.therundown.ai",
+      "published_date": "2026-07-10",
+      "inserted_at": "2026-07-14T08:09:20.763618+00:00",
+      "image_url": null
+    },
+    {
+      "id": 52,
+      "title_en": "4D Human-Scene Reconstruction from Low-Overlap Captures",
+      "source": "huggingface.co",
+      "published_date": "2026-07-10",
+      "inserted_at": "2026-07-14T07:08:16.220169+00:00",
+      "image_url": null
+    },
+    {
+      "id": 49,
+      "title_en": "ABot-AgentOS: A General Robotic Agent OS with Lifelong Multi-modal Memory",
+      "source": "huggingface.co",
+      "published_date": "2026-07-11",
+      "inserted_at": "2026-07-14T07:07:39.660853+00:00",
+      "image_url": "https://cdn-uploads.huggingface.co/production/uploads/65377c30e48353201e6fdda0/2XjeKWrewB9yse0gi-N77.png"
+    },
+    {
+      "id": 62,
+      "title_en": "VKUE: No GPU? Runs Anyway — a 34.7B Reasoner on a Laptop and on Bare CPU",
+      "source": "huggingface.co",
+      "published_date": "2026-07-12",
+      "inserted_at": "2026-07-14T07:11:42.635463+00:00",
+      "image_url": null
+    },
+    {
+      "id": 6,
+      "title_en": "Agentic AI News — July 2026 Launches, Models & Research",
+      "source": "agentic.ai",
+      "published_date": "2026-07-12",
+      "inserted_at": "2026-07-14T03:23:23.522038+00:00",
+      "image_url": null
+    },
+    {
+      "id": 60,
+      "title_en": "Giving AI Agents 3D Bodies, Real Jobs, and Wallets on three.ws",
+      "source": "huggingface.co",
+      "published_date": "2026-07-13",
+      "inserted_at": "2026-07-14T07:11:04.172025+00:00",
+      "image_url": null
+    },
+    {
+      "id": 71,
+      "title_en": "Apple takes OpenAI to court",
+      "source": "www.therundown.ai",
+      "published_date": "2026-07-13",
+      "inserted_at": "2026-07-14T08:09:05.908747+00:00",
+      "image_url": null
+    },
+    {
+      "id": 51,
+      "title_en": "LightMem-Ego: Your AI Memory for Everyday Life",
+      "source": "huggingface.co",
+      "published_date": "2026-07-13",
+      "inserted_at": "2026-07-14T07:08:03.557589+00:00",
+      "image_url": null
+    },
+    {
+      "id": 114,
+      "title_en": "Read It Back: Pretrained MLLMs Are Zero-Shot Reward Models for Text-to-Image Generation",
+      "source": "huggingface.co",
+      "published_date": "2026-07-13",
+      "inserted_at": "2026-07-15T02:51:03.671961+00:00",
+      "image_url": null
+    },
+    {
+      "id": 56,
+      "title_en": "Proxy Exploration and Reusable Guidance: A Modular LLM Post-Training Paradigm via Proxy-Guided Update Signals",
+      "source": "huggingface.co",
+      "published_date": "2026-07-13",
+      "inserted_at": "2026-07-14T07:10:02.959616+00:00",
+      "image_url": "https://cdn-uploads.huggingface.co/production/uploads/64673506b990713c503079bc/29rDaJ_2_kZvgKS-jjw8z.png"
+    },
+    {
+      "id": 276,
+      "title_en": "RAGU: A Multi-Step GraphRAG Engine with a Compact Domain-Adapted LLM",
+      "source": "huggingface.co",
+      "published_date": "2026-07-13",
+      "inserted_at": "2026-07-20T06:25:41.392883+00:00",
+      "image_url": null
+    },
+    {
+      "id": 39,
+      "title_en": "AI News — Today's Top Stories, Tracked & Ranked | AI Weekly",
+      "source": "aiweekly.co",
+      "published_date": "2026-07-13",
+      "inserted_at": "2026-07-14T04:20:07.589709+00:00",
+      "image_url": null
+    },
+    {
+      "id": 63,
+      "title_en": "J-Space: Yet Another LLM Mind Reader?",
+      "source": "huggingface.co",
+      "published_date": "2026-07-13",
+      "inserted_at": "2026-07-14T07:12:09.639334+00:00",
+      "image_url": null
+    },
+    {
+      "id": 54,
+      "title_en": "AdvancedMathBench: A Benchmark Suite for Advanced Mathematical Proof Generation and Verification",
+      "source": "huggingface.co",
+      "published_date": "2026-07-13",
+      "inserted_at": "2026-07-14T07:08:48.528405+00:00",
+      "image_url": null
+    },
+    {
+      "id": 115,
+      "title_en": "Know Before Fix: QA-Driven Repository Knowledge Acquisition for Software Issue Resolution",
+      "source": "huggingface.co",
+      "published_date": "2026-07-13",
+      "inserted_at": "2026-07-15T02:51:18.924444+00:00",
+      "image_url": null
+    },
+    {
+      "id": 55,
+      "title_en": "Metacognition in LLMs: Foundations, Progress, and Opportunities",
+      "source": "huggingface.co",
+      "published_date": "2026-07-13",
+      "inserted_at": "2026-07-14T07:09:46.005995+00:00",
+      "image_url": "https://cdn-uploads.huggingface.co/production/uploads/64f1ca1d5b8a6a5d39d75771/WNoyDb56Oi7WWwckeC-LV.jpeg"
+    },
+    {
+      "id": 14,
+      "title_en": "Artificial Intelligence - Recent Submissions on arXiv.org",
+      "source": "arxiv.org",
+      "published_date": "2026-07-14",
+      "inserted_at": "2026-07-14T03:25:46.260986+00:00",
+      "image_url": null
+    },
+    {
+      "id": 116,
+      "title_en": "Economists, researchers put AI's job shock on the clock",
+      "source": "www.therundown.ai",
+      "published_date": "2026-07-14",
+      "inserted_at": "2026-07-15T02:51:41.75183+00:00",
+      "image_url": null
+    },
+    {
+      "id": 299,
+      "title_en": "ReflectWorld-MM: An Entity-Oriented Multimodal Memory System for Open-Ended Video Streams",
+      "source": "huggingface.co",
+      "published_date": "2026-07-14",
+      "inserted_at": "2026-07-21T06:04:34.837924+00:00",
+      "image_url": null
+    },
+    {
+      "id": 213,
+      "title_en": "UniVR: Thinking in Visual Space for Unified Visual Reasoning",
+      "source": "huggingface.co",
+      "published_date": "2026-07-14",
+      "inserted_at": "2026-07-19T05:09:03.113643+00:00",
+      "image_url": null
+    },
+    {
+      "id": 173,
+      "title_en": "Ring-Zero: Scaling Zero RL to a Trillion Parameters for Emergent Reasoning",
+      "source": "huggingface.co",
+      "published_date": "2026-07-14",
+      "inserted_at": "2026-07-16T03:00:45.964655+00:00",
+      "image_url": null
+    },
+    {
+      "id": 176,
+      "title_en": "ShortOPD: Recovering Pruned LLMs with Short-to-Long On-Policy Distillation",
+      "source": "huggingface.co",
+      "published_date": "2026-07-14",
+      "inserted_at": "2026-07-16T03:01:40.582401+00:00",
+      "image_url": null
+    },
+    {
+      "id": 177,
+      "title_en": "Harness Handbook: Making Evolving Agent Harnesses Readable, Navigable, and Editable",
+      "source": "huggingface.co",
+      "published_date": "2026-07-14",
+      "inserted_at": "2026-07-16T03:01:56.874643+00:00",
+      "image_url": null
+    },
+    {
+      "id": 274,
+      "title_en": "From Human-Centric to Agentic Code Review: The Impact of Different Generations of Generative AI Technology on Review Quality",
+      "source": "huggingface.co",
+      "published_date": "2026-07-14",
+      "inserted_at": "2026-07-20T06:25:12.11537+00:00",
+      "image_url": null
+    },
+    {
+      "id": 271,
+      "title_en": "Cura 1T: Specialized Model for Agentic Healthcare",
+      "source": "huggingface.co",
+      "published_date": "2026-07-15",
+      "inserted_at": "2026-07-20T06:24:28.74468+00:00",
+      "image_url": null
+    },
+    {
+      "id": 205,
+      "title_en": "MultiRef-Compass: Towards Comprehensive Evaluation of Multi-Reference-to-Audio-Video Generation",
+      "source": "huggingface.co",
+      "published_date": "2026-07-15",
+      "inserted_at": "2026-07-19T05:05:43.320176+00:00",
+      "image_url": null
+    },
+    {
+      "id": 204,
+      "title_en": "KeyFrame-Compass: Towards Comprehensive Evaluation of Keyframe-Conditioned Video Generation",
+      "source": "huggingface.co",
+      "published_date": "2026-07-15",
+      "inserted_at": "2026-07-19T05:05:26.483726+00:00",
+      "image_url": null
+    },
+    {
+      "id": 174,
+      "title_en": "KnowAct-GUIClaw: Know Deeply, Act Perfectly, Personal GUI Assistant with Self-Evolving Memory and Skill",
+      "source": "huggingface.co",
+      "published_date": "2026-07-15",
+      "inserted_at": "2026-07-16T03:01:04.783533+00:00",
+      "image_url": "https://cdn-uploads.huggingface.co/production/uploads/62fdb01bc1588e1d4c6c1a7c/FuxFYDTH-NZ52ZP6zGPWy.png"
+    },
+    {
+      "id": 175,
+      "title_en": "OvisOCR2 Technical Report",
+      "source": "huggingface.co",
+      "published_date": "2026-07-15",
+      "inserted_at": "2026-07-16T03:01:19.354555+00:00",
+      "image_url": null
+    },
+    {
+      "id": 231,
+      "title_en": "From Pixels to States: Rethinking Interactive World Models as Game Engines",
+      "source": "huggingface.co",
+      "published_date": "2026-07-15",
+      "inserted_at": "2026-07-19T05:21:47.194861+00:00",
+      "image_url": "https://cdn-uploads.huggingface.co/production/uploads/65f1713552c38a91e0a445e8/EFVQA-emcL-MQ4Cch-qXK.png"
+    },
+    {
+      "id": 178,
+      "title_en": "Demis Hassabis puts a clock on AI oversight",
+      "source": "www.therundown.ai",
+      "published_date": "2026-07-15",
+      "inserted_at": "2026-07-16T03:02:25.458468+00:00",
+      "image_url": null
+    },
+    {
+      "id": 384,
+      "title_en": "Anchor-Align boosts VLA robot generalization with representation anchoring",
+      "source": "huggingface.co",
+      "published_date": "2026-07-15",
+      "inserted_at": "2026-07-23T03:24:50.530744+00:00",
+      "image_url": "https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2607.13429/gradient.png"
+    },
+    {
+      "id": 275,
+      "title_en": "On-Policy Delta Distillation",
+      "source": "huggingface.co",
+      "published_date": "2026-07-16",
+      "inserted_at": "2026-07-20T06:25:25.693466+00:00",
+      "image_url": null
+    },
+    {
+      "id": 269,
+      "title_en": "Xiaomi-Robotics-1: Scaling Vision-Language-Action Models with over 100K Hours of Real-World Trajectories",
+      "source": "huggingface.co",
+      "published_date": "2026-07-16",
+      "inserted_at": "2026-07-20T06:23:53.525706+00:00",
+      "image_url": null
+    },
+    {
+      "id": 202,
+      "title_en": "SearchOS-V1: Towards Robust Open-Domain Information-Seeking Agent Collaboration",
+      "source": "huggingface.co",
+      "published_date": "2026-07-16",
+      "inserted_at": "2026-07-19T05:04:55.14913+00:00",
+      "image_url": null
+    },
+    {
+      "id": 270,
+      "title_en": "xHC: Expanded Hyper-Connections",
+      "source": "huggingface.co",
+      "published_date": "2026-07-16",
+      "inserted_at": "2026-07-20T06:24:10.351586+00:00",
+      "image_url": null
+    },
+    {
+      "id": 199,
+      "title_en": "LongStraw: Long-Context RL Beyond 2M Tokens under a Fixed GPU Budget",
+      "source": "huggingface.co",
+      "published_date": "2026-07-16",
+      "inserted_at": "2026-07-19T05:04:09.563916+00:00",
+      "image_url": null
+    },
+    {
+      "id": 201,
+      "title_en": "SEED: Self-Evolving On-Policy Distillation for Agentic Reinforcement Learning",
+      "source": "huggingface.co",
+      "published_date": "2026-07-16",
+      "inserted_at": "2026-07-19T05:04:38.701285+00:00",
+      "image_url": null
+    },
+    {
+      "id": 223,
+      "title_en": "NVIDIA Nemotron 3 Embed Ranks #1 Overall on RTEB, Advancing Agentic Retrieval",
+      "source": "huggingface.co",
+      "published_date": "2026-07-16",
+      "inserted_at": "2026-07-19T05:12:14.672783+00:00",
+      "image_url": null
+    },
+    {
+      "id": 268,
+      "title_en": "One Adapter, Both Modalities: Field Notes from Building and Serving a Multimodal Reranker",
+      "source": "huggingface.co",
+      "published_date": "2026-07-16",
+      "inserted_at": "2026-07-19T11:41:43.520289+00:00",
+      "image_url": null
+    },
+    {
+      "id": 215,
+      "title_en": "OpenAI's new $230 AI agent control pad PLUS: Use Manus to write better LinkedIn posts in your voice",
+      "source": "www.therundown.ai",
+      "published_date": "2026-07-16",
+      "inserted_at": "2026-07-19T05:09:45.749079+00:00",
+      "image_url": null
+    },
+    {
+      "id": 203,
+      "title_en": "BadWAM: When World-Action Models Dream Right but Act Wrong",
+      "source": "huggingface.co",
+      "published_date": "2026-07-16",
+      "inserted_at": "2026-07-19T05:05:11.699703+00:00",
+      "image_url": null
+    },
+    {
+      "id": 200,
+      "title_en": "VideoChat3: Fully Open Video MLLM for Efficient and Generalist Video Understanding",
+      "source": "huggingface.co",
+      "published_date": "2026-07-16",
+      "inserted_at": "2026-07-19T05:04:24.921004+00:00",
+      "image_url": null
+    },
+    {
+      "id": 273,
+      "title_en": "RecGPT-V3 Technical Report",
+      "source": "huggingface.co",
+      "published_date": "2026-07-17",
+      "inserted_at": "2026-07-20T06:24:56.340946+00:00",
+      "image_url": null
+    },
+    {
+      "id": 214,
+      "title_en": "Moonshot's Kimi K3 closes the frontier gap",
+      "source": "www.therundown.ai",
+      "published_date": "2026-07-17",
+      "inserted_at": "2026-07-19T05:09:27.880277+00:00",
+      "image_url": null
+    },
+    {
+      "id": 266,
+      "title_en": "Kimi K3 Model Overview: 2.8T Parameters, MXFP4 Quantization, and What the Open Weights Mean for the Community",
+      "source": "huggingface.co",
+      "published_date": "2026-07-17",
+      "inserted_at": "2026-07-19T11:41:00.066242+00:00",
+      "image_url": null
+    },
+    {
+      "id": 329,
+      "title_en": "DataFlow-Harness: A Grounded Code-Agent Platform for Constructing Editable LLM Data Pipelines",
+      "source": "huggingface.co",
+      "published_date": "2026-07-18",
+      "inserted_at": "2026-07-22T08:58:17.521341+00:00",
+      "image_url": null
+    },
+    {
+      "id": 304,
+      "title_en": "Environment-free Synthetic Data Generation for API-Calling Agents",
+      "source": "huggingface.co",
+      "published_date": "2026-07-18",
+      "inserted_at": "2026-07-21T06:05:50.461083+00:00",
+      "image_url": null
+    },
+    {
+      "id": 301,
+      "title_en": "Group Entropy-Controlled Policy Optimization",
+      "source": "huggingface.co",
+      "published_date": "2026-07-18",
+      "inserted_at": "2026-07-21T06:05:02.324102+00:00",
+      "image_url": null
+    },
+    {
+      "id": 306,
+      "title_en": "TimeLens2: Generalist Video Temporal Grounding with Multimodal LLMs",
+      "source": "huggingface.co",
+      "published_date": "2026-07-19",
+      "inserted_at": "2026-07-21T06:06:23.324568+00:00",
+      "image_url": null
+    },
+    {
+      "id": 305,
+      "title_en": "EvolvingWorld: An Open-Schema Framework for Co-Evolving Role-Play Agents and World Model in Interactive Literary World",
+      "source": "huggingface.co",
+      "published_date": "2026-07-19",
+      "inserted_at": "2026-07-21T06:06:07.638419+00:00",
+      "image_url": null
+    }
+  ]
+}
