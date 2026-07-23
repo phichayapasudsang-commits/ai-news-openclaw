@@ -514,14 +514,19 @@ ${text || "(no body extracted)"}
 Return ONLY the JSON object described above.`.trim();
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: process.env.OPENAI_MODEL_NAME ?? "ptm-minimax-m3",
-      temperature: 0.3,
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: user },
-      ],
-    });
+    const completion = await openai.chat.completions.create(
+      {
+        model: process.env.OPENAI_MODEL_NAME ?? "ptm-minimax-m3",
+        temperature: 0.3,
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: user },
+        ],
+      },
+      // Hard cap per article: 60s. Anything longer is a hung socket /
+      // model stall — skip this article rather than block the whole run.
+      { signal: AbortSignal.timeout(60_000) }
+    );
     const raw = completion.choices[0]?.message?.content?.trim() ?? "";
     if (!raw) {
       console.warn(`[digest] empty LLM reply for ${hit.url}`);
@@ -599,8 +604,14 @@ Return ONLY the JSON object described above.`.trim();
     };
     return obj;
   } catch (err) {
-    // Outer catch now only fires for non-parse errors (LLM HTTP, network).
-    console.warn(`[digest] summarise ${hit.url} failed:`, (err as Error).message);
+    // Outer catch now only fires for non-parse errors (LLM HTTP, network,
+    // or our own AbortSignal timeout).
+    const msg = (err as Error).message;
+    const isTimeout =
+      (err as { name?: string }).name === "AbortError" || /aborted/i.test(msg);
+    console.warn(
+      `[digest] summarise ${hit.url} ${isTimeout ? "TIMED OUT" : "failed"}: ${msg}`
+    );
     return null;
   }
 }
