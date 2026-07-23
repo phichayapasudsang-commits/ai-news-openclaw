@@ -1,0 +1,50 @@
+{
+  "summary": {
+    "cleanup_date": "2026-07-23T06:48:42.985Z",
+    "cutoff": "2026-07-21T00:00:00.000Z",
+    "retention_days": 3,
+    "retention_rule": "rows where inserted_at < cutoff are deleted (last N calendar days of summarisation)",
+    "total": 4,
+    "by_source": {
+      "paperswithcode.co": 3,
+      "huggingface.co": 1
+    },
+    "by_inserted_at_date": {
+      "2026-07-20": 4
+    }
+  },
+  "rows": [
+    {
+      "id": 289,
+      "title_en": "Boogu-Image-0.1: Boosting Open-Source Unified Multimodal Understanding and Generation",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-20T06:31:36.627377+00:00",
+      "image_url": null
+    },
+    {
+      "id": 290,
+      "title_en": "Scaling the Horizon, Not the Parameters: Reaching Trillion-Parameter Performance with a 35B Agent",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-20T06:32:05.773359+00:00",
+      "image_url": null
+    },
+    {
+      "id": 292,
+      "title_en": "Qwen3-ASR Technical Report",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-20T06:33:00.080309+00:00",
+      "image_url": null
+    },
+    {
+      "id": 298,
+      "title_en": "Aether-7B-5Attn: A 100% Open-Source Sovereign Foundation Model with Heterogeneous Attention",
+      "source": "huggingface.co",
+      "published_date": null,
+      "inserted_at": "2026-07-20T06:34:48.17984+00:00",
+      "image_url": null
+    }
+  ]
+}

@@ -35,28 +35,32 @@ if (!url || !key) {
   process.exit(1);
 }
 
-// "Today" in UTC to match Supabase's default timezone for date columns.
-// Cutoff = today - days. We delete where published_date <= cutoff, so the
-// retention window is the inclusive range (today - days + 1, today].
-// E.g. days=3 on 2026-07-23 → cutoff = 2026-07-20 → delete rows with
-// published_date <= 2026-07-20 → keep 2026-07-21, 22, 23.
+// Cutoff: rows whose inserted_at < (today_utc - (days - 1) days) are
+// deleted. This keeps EXACTLY `days` calendar days of summarisation work:
+// for today=2026-07-23, days=3 → cutoff = 2026-07-21 00:00:00Z → keep
+// inserted_at on 2026-07-21, 22, 23. Use this — not published_date —
+// because we summarise fresh every day; an article scraped today with an
+// old published_date still occupies a fresh slot and should expire with
+// the rest of that day's batch.
 const now = new Date();
 const todayUtc = new Date(
   Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
 );
 const cutoff = new Date(todayUtc);
-cutoff.setUTCDate(cutoff.getUTCDate() - days);
+cutoff.setUTCDate(cutoff.getUTCDate() - (days - 1));
+const cutoffIso = cutoff.toISOString(); // start-of-day UTC for the first day we KEEP
 const cutoffStr = cutoff.toISOString().slice(0, 10);
 const todayStr = todayUtc.toISOString().slice(0, 10);
+const firstKeptStr = cutoffStr; // inclusive lower bound
 
 console.log(`Mode:     ${dryRun ? "DRY-RUN (no rows deleted)" : "LIVE DELETE"}`);
 console.log(`Today:    ${todayStr} (UTC)`);
-console.log(`Cutoff:   published_date <= ${cutoffStr} (will be deleted)`);
-console.log(`Keep:     ${days} days inclusive (${days === 1 ? todayStr : `${addDays(todayStr, -(days - 1))} → ${todayStr}`})`);
+console.log(`Cutoff:   inserted_at < ${cutoffIso} (will be deleted)`);
+console.log(`Keep:     inserted_at on/after ${cutoffIso} → ${days} day${days > 1 ? "s" : ""} inclusive (${days === 1 ? todayStr : `${firstKeptStr} → ${todayStr}`})`);
 
 // 1. Count and preview
 const selectRes = await fetch(
-  `${url}/rest/v1/articles?select=id,title_en,published_date,source&published_date=lte.${cutoffStr}&order=published_date.asc&limit=500`,
+  `${url}/rest/v1/articles?select=id,title_en,inserted_at,source,published_date&inserted_at=lt.${cutoffIso}&order=inserted_at.asc&limit=500`,
   { headers: { apikey: key, Authorization: `Bearer ${key}` } },
 );
 if (!selectRes.ok) {
@@ -65,30 +69,15 @@ if (!selectRes.ok) {
 }
 const oldRows = await selectRes.json();
 
-const nullRes = await fetch(
-  `${url}/rest/v1/articles?select=id&published_date=is.null`,
-  { headers: { apikey: key, Authorization: `Bearer ${key}`, Prefer: "count=exact" } },
-);
-let nullCount = 0;
-if (nullRes.ok) {
-  // Prefer count header; fall back to array length
-  const range = nullRes.headers.get("content-range");
-  if (range && range.includes("/")) {
-    nullCount = Number(range.split("/")[1]);
-  } else {
-    const arr = await nullRes.json();
-    nullCount = arr.length;
-  }
-}
-
-console.log(`\nRows to delete:    ${oldRows.length}`);
-console.log(`Rows with null published_date (kept): ${nullCount}`);
+console.log(`\nRows to delete: ${oldRows.length}`);
 
 if (oldRows.length > 0) {
   console.log("\n=== preview (oldest first, up to 10) ===");
   oldRows.slice(0, 10).forEach((r) => {
     const title = (r.title_en || "(no title)").slice(0, 60);
-    console.log(`  [${r.published_date}] ${(r.source || "?").padEnd(28)} — ${title}`);
+    const ins = (r.inserted_at || "").slice(0, 16).replace("T", " ");
+    const pub = r.published_date || "?";
+    console.log(`  [ins=${ins}  pub=${pub}] ${(r.source || "?").padEnd(28)} — ${title}`);
   });
   if (oldRows.length > 10) console.log(`  ... and ${oldRows.length - 10} more`);
 }

@@ -1,0 +1,247 @@
+{
+  "summary": {
+    "cleanup_date": "2026-07-23T06:47:33.022Z",
+    "cutoff": "2026-07-20T00:00:00.000Z",
+    "retention_days": 3,
+    "retention_rule": "rows where inserted_at < cutoff are deleted (last N calendar days of summarisation)",
+    "total": 27,
+    "by_source": {
+      "blog.modelcontextprotocol.io": 2,
+      "aaif.io": 1,
+      "modelcontextprotocol.info": 1,
+      "devblogs.microsoft.com": 1,
+      "aipapers.ai": 1,
+      "arxiv.org": 1,
+      "github.com": 1,
+      "news.google.com": 1,
+      "link.springer.com": 1,
+      "www.sciencedaily.com": 1,
+      "huggingface.co": 2,
+      "www.therundown.ai": 2,
+      "paperswithcode.co": 12
+    },
+    "by_inserted_at_date": {
+      "2026-07-14": 19,
+      "2026-07-16": 4,
+      "2026-07-19": 4
+    }
+  },
+  "rows": [
+    {
+      "id": 1,
+      "title_en": "Model Context Protocol Blog: Latest Updates on MCP Spec, SDKs, and Enterprise Authorization",
+      "source": "blog.modelcontextprotocol.io",
+      "published_date": null,
+      "inserted_at": "2026-07-14T03:22:08.883331+00:00",
+      "image_url": null
+    },
+    {
+      "id": 2,
+      "title_en": "Model Context Protocol - Agentic AI Foundation (AAIF)",
+      "source": "aaif.io",
+      "published_date": null,
+      "inserted_at": "2026-07-14T03:22:22.842004+00:00",
+      "image_url": null
+    },
+    {
+      "id": 4,
+      "title_en": "MCP Protocol Blog - Model Context Protocol (MCP)",
+      "source": "modelcontextprotocol.info",
+      "published_date": null,
+      "inserted_at": "2026-07-14T03:22:51.588292+00:00",
+      "image_url": null
+    },
+    {
+      "id": 5,
+      "title_en": "MCP Blog: Latest Updates on the Model Context Protocol",
+      "source": "blog.modelcontextprotocol.io",
+      "published_date": null,
+      "inserted_at": "2026-07-14T03:23:03.561392+00:00",
+      "image_url": null
+    },
+    {
+      "id": 8,
+      "title_en": "Microsoft Agent Framework Blog",
+      "source": "devblogs.microsoft.com",
+      "published_date": null,
+      "inserted_at": "2026-07-14T03:23:57.934676+00:00",
+      "image_url": null
+    },
+    {
+      "id": 15,
+      "title_en": "AIPapers.ai - Daily AI Research Papers Digest",
+      "source": "aipapers.ai",
+      "published_date": null,
+      "inserted_at": "2026-07-14T03:26:00.376906+00:00",
+      "image_url": null
+    },
+    {
+      "id": 16,
+      "title_en": "Artificial Intelligence Research Listings - July 2026",
+      "source": "arxiv.org",
+      "published_date": null,
+      "inserted_at": "2026-07-14T03:26:15.251031+00:00",
+      "image_url": null
+    },
+    {
+      "id": 26,
+      "title_en": "MemPalace: The Best-Benchmarked Open-Source AI Memory System",
+      "source": "github.com",
+      "published_date": null,
+      "inserted_at": "2026-07-14T04:12:23.854178+00:00",
+      "image_url": null
+    },
+    {
+      "id": 28,
+      "title_en": "Google News - Artificial Intelligence: Latest Developments and Concerns",
+      "source": "news.google.com",
+      "published_date": null,
+      "inserted_at": "2026-07-14T04:12:55.163197+00:00",
+      "image_url": null
+    },
+    {
+      "id": 31,
+      "title_en": "Artificial Intelligence - Recent Articles and Discoveries",
+      "source": "link.springer.com",
+      "published_date": null,
+      "inserted_at": "2026-07-14T04:13:45.740679+00:00",
+      "image_url": null
+    },
+    {
+      "id": 32,
+      "title_en": "Artificial Intelligence News -- ScienceDaily",
+      "source": "www.sciencedaily.com",
+      "published_date": null,
+      "inserted_at": "2026-07-14T04:14:04.117349+00:00",
+      "image_url": null
+    },
+    {
+      "id": 50,
+      "title_en": "ABot-N1: Toward a General Visual Language Navigation Foundation Model",
+      "source": "huggingface.co",
+      "published_date": null,
+      "inserted_at": "2026-07-14T07:07:52.904971+00:00",
+      "image_url": null
+    },
+    {
+      "id": 57,
+      "title_en": "The Rundown AI Archive: Latest AI News and Insights",
+      "source": "www.therundown.ai",
+      "published_date": null,
+      "inserted_at": "2026-07-14T07:10:17.39777+00:00",
+      "image_url": null
+    },
+    {
+      "id": 58,
+      "title_en": "Subscribe to The Rundown AI Newsletter",
+      "source": "www.therundown.ai",
+      "published_date": null,
+      "inserted_at": "2026-07-14T07:10:24.981212+00:00",
+      "image_url": null
+    },
+    {
+      "id": 59,
+      "title_en": "Hugging Face Community Blog – Recent Articles",
+      "source": "huggingface.co",
+      "published_date": null,
+      "inserted_at": "2026-07-14T07:10:34.678686+00:00",
+      "image_url": null
+    },
+    {
+      "id": 100,
+      "title_en": "Vision as Unified Multimodal Generation",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-14T08:40:59.984652+00:00",
+      "image_url": null
+    },
+    {
+      "id": 102,
+      "title_en": "Unlimited OCR Works",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-14T08:41:57.987238+00:00",
+      "image_url": null
+    },
+    {
+      "id": 103,
+      "title_en": "Vision Pretraining for Dense Spatial Perception",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-14T08:42:36.445523+00:00",
+      "image_url": null
+    },
+    {
+      "id": 107,
+      "title_en": "HunyuanOCR-1.5: Making Lightweight OCR VLMs Faster and Better",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-14T08:44:25.611017+00:00",
+      "image_url": null
+    },
+    {
+      "id": 186,
+      "title_en": "Announcing Bonsai 27B: The First 27B-Class Model to Run on a Phone",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-16T03:05:36.444007+00:00",
+      "image_url": null
+    },
+    {
+      "id": 187,
+      "title_en": "MinerU2.5-Pro: Pushing the Limits of Data-Centric Document Parsing at Scale",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-16T03:06:08.449846+00:00",
+      "image_url": null
+    },
+    {
+      "id": 188,
+      "title_en": "MonkeyOCRv2: A Visual-Text Foundation Model for Document AI",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-16T03:06:38.830651+00:00",
+      "image_url": null
+    },
+    {
+      "id": 192,
+      "title_en": "HY-Embodied-0.5: Embodied Foundation Models for Real-World Agents",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-16T03:08:37.952077+00:00",
+      "image_url": null
+    },
+    {
+      "id": 255,
+      "title_en": "Ultralytics YOLO26: Unified Real-Time End-to-End Vision Models",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-19T11:36:29.895035+00:00",
+      "image_url": null
+    },
+    {
+      "id": 256,
+      "title_en": "VideoChat3: Fully Open Video MLLM for Efficient and Generalist Video Understanding",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-19T11:36:58.6653+00:00",
+      "image_url": null
+    },
+    {
+      "id": 257,
+      "title_en": "SenseNova-U1: Unifying Multimodal Understanding and Generation with NEO-unify Architecture",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-19T11:37:27.80528+00:00",
+      "image_url": null
+    },
+    {
+      "id": 258,
+      "title_en": "Kimi K2.5: Visual Agentic Intelligence",
+      "source": "paperswithcode.co",
+      "published_date": null,
+      "inserted_at": "2026-07-19T11:37:54.571846+00:00",
+      "image_url": null
+    }
+  ]
+}
