@@ -44,31 +44,24 @@ jobs:
   digest:
     name: Run daily digest
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.0-jammy
     timeout-minutes: 15
 
     env:
       # Disable embedder network calls if the OpenAI key doesn't support them.
-      # This matches the local .env default.
       FORCE_STUB_EMBEDDINGS: '1'
+      PLAYWRIGHT_BROWSERS_PATH: '/ms-playwright'
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Node 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
 
       - name: Install dependencies (skip optionalDependencies like openclaw)
         run: npm ci --omit=optional
 
       - name: Install dev deps for TypeScript build
         run: npm install --no-save typescript@5.5.4 tsx@4.19.0
-
-      - name: Install Playwright Chromium + system libs
-        run: npx playwright install --with-deps chromium
 
       - name: Type-check + compile to dist/
         run: npm run build
