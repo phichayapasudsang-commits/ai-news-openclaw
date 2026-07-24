@@ -31,6 +31,7 @@ services:
       DIGEST_CRON: "0 3 * * 1-5"
       TZ: "Asia/Bangkok"
       RUN_ONCE: "0"
+      RUN_SCRIPT: "digest"
     volumes:
       # Persist digest logs on the host so they survive container restarts.
       - ./logs:/app/logs
@@ -50,7 +51,28 @@ services:
     restart: "no"
     environment:
       RUN_ONCE: "1"
-      DIGEST_CRON: "0 3 * * 1-5"
-      TZ: "Asia/Bangkok"
+      RUN_SCRIPT: "digest"
+    profiles:
+      - oneshot
+
+  pipeline:
+    extends:
+      service: digest
+    container_name: ai-news-pipeline
+    environment:
+      RUN_SCRIPT: "pipeline"
+      # Run pipeline every weekday at 11:00 Asia/Bangkok
+      DIGEST_CRON: "0 4 * * 1-5"
+    profiles:
+      - cron
+
+  pipeline-once:
+    extends:
+      service: digest
+    container_name: ai-news-pipeline-once
+    restart: "no"
+    environment:
+      RUN_ONCE: "1"
+      RUN_SCRIPT: "pipeline"
     profiles:
       - oneshot

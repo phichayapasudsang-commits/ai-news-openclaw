@@ -13,21 +13,36 @@
 
 set -eu
 
+# Determine run script: "digest" (default) or "pipeline"
+RUN_SCRIPT="${RUN_SCRIPT:-digest}"
+if [ "$RUN_SCRIPT" = "pipeline" ]; then
+    SCRIPT_NAME="index"
+    LOG_NAME="pipeline"
+else
+    SCRIPT_NAME="digest"
+    LOG_NAME="digest"
+fi
+
 # Render cron line with the env-provided schedule (or default).
 DIGEST_CRON="${DIGEST_CRON:-0 3 * * 1-5}"
 mkdir -p /app/logs
-sed "s|__DIGEST_CRON__|${DIGEST_CRON}|" /etc/crontab.digest > /tmp/crontab.rendered
 
-echo "[entrypoint] starting ai-news-digest container"
-echo "[entrypoint] TZ=$TZ  RUN_ONCE=${RUN_ONCE:-0}  DIGEST_CRON='${DIGEST_CRON}'"
+# Replace schedule and script names in crontab template
+sed -e "s|__CRON_SCHEDULE__|${DIGEST_CRON}|" \
+    -e "s|__SCRIPT_NAME__|${SCRIPT_NAME}|" \
+    -e "s|__LOG_NAME__|${LOG_NAME}|" \
+    /etc/crontab.digest > /tmp/crontab.rendered
+
+echo "[entrypoint] starting ai-news-${RUN_SCRIPT} container"
+echo "[entrypoint] TZ=${TZ:-Asia/Bangkok}  RUN_ONCE=${RUN_ONCE:-0}  DIGEST_CRON='${DIGEST_CRON}'"
 echo "[entrypoint] node $(node --version)"
-echo "[entrypoint] digest crontab:"
+echo "[entrypoint] crontab configuration:"
 sed 's/^/    /' /tmp/crontab.rendered
 
 if [ "${RUN_ONCE:-0}" = "1" ]; then
-    echo "[entrypoint] RUN_ONCE=1 — executing one digest pass now"
+    echo "[entrypoint] RUN_ONCE=1 — executing one ${RUN_SCRIPT} pass now"
     cd /app
-    exec node dist/digest.js
+    exec node dist/${SCRIPT_NAME}.js
 fi
 
 echo "[entrypoint] starting supercronic"

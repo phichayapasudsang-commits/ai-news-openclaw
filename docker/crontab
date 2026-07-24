@@ -5,4 +5,4 @@
 # Override via DIGEST_CRON env var; the entrypoint substitutes it on startup.
 #
 # Cron format: minute hour day-of-month month day-of-week command
-__DIGEST_CRON__ cd /app && node dist/digest.js >> /app/logs/digest.log 2>&1
+__CRON_SCHEDULE__ cd /app && node dist/__SCRIPT_NAME__.js >> /app/logs/__LOG_NAME__.log 2>&1
