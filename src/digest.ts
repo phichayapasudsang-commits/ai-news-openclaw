@@ -235,6 +235,39 @@ export function extractImageFromHtml(html: string, baseUrl: string): string | nu
   );
 }
 
+/**
+ * Best-effort published date extraction from raw HTML.
+ * Looks for common metadata tags and JSON-LD schema objects.
+ */
+export function extractDateFromHtml(html: string): string | null {
+  if (!html) return null;
+
+  const pickMeta = (re: RegExp): string | null => {
+    const m = html.match(re);
+    return m ? m[1] ?? m[2] ?? null : null;
+  };
+
+  const raw =
+    pickMeta(/<meta[^>]+property=["']article:published_time["'][^>]+content=["']([^"']+)["']/i) ??
+    pickMeta(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']article:published_time["']/i) ??
+    pickMeta(/<meta[^>]+name=["']date["'][^>]+content=["']([^"']+)["']/i) ??
+    pickMeta(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']date["']/i) ??
+    pickMeta(/<meta[^>]+itemprop=["']datePublished["'][^>]+content=["']([^"']+)["']/i) ??
+    pickMeta(/"datePublished"\s*:\s*"([^"]+)"/i) ??
+    pickMeta(/"pubdate"\s*:\s*"([^"]+)"/i);
+
+  if (!raw) return null;
+  try {
+    const t = Date.parse(raw);
+    if (!Number.isNaN(t)) {
+      return new Date(t).toISOString().slice(0, 10);
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
 /** Strip HTML tags/script/style and collapse whitespace. */
 function htmlToText(html: string): string {
   return html
@@ -360,11 +393,12 @@ async function fetchRendered(
 interface FetchedPage {
   text: string;
   imageUrl: string | null;
+  publishedDate: string | null;
 }
 
 /** Empty placeholder returned when a fetch fails. Text is "" so the
  *  caller's "text.length < 200" short-circuit still drops the article. */
-const EMPTY_PAGE: FetchedPage = { text: "", imageUrl: null };
+const EMPTY_PAGE: FetchedPage = { text: "", imageUrl: null, publishedDate: null };
 
 /** Fetch a URL and return plain text + best image, capped to MAX_TEXT_CHARS. */
 async function fetchPage(url: string): Promise<FetchedPage> {
@@ -391,6 +425,7 @@ async function fetchPage(url: string): Promise<FetchedPage> {
     return {
       text: htmlToText(raw).slice(0, MAX_TEXT_CHARS),
       imageUrl: extractImageFromHtml(raw, url),
+      publishedDate: extractDateFromHtml(raw),
     };
   } catch (err) {
     console.warn(`[digest] fetch ${url} failed:`, (err as Error).message);
@@ -786,6 +821,8 @@ async function main() {
   console.log(`[digest] start ${startedAt.toISOString()}`);
   console.log(`[digest] sources: ${SOURCES.map((s) => s.id).join(", ")}`);
 
+  const { today: bkkToday, yesterday: bkkYesterday } = getBangkokDates();
+
   let inserted = 0;
   let skipped = 0;
   let duped = 0;
@@ -841,12 +878,28 @@ async function main() {
         page = {
           text: htmlToText(html).slice(0, MAX_TEXT_CHARS),
           imageUrl: extractImageFromHtml(html, hit.url),
+          publishedDate: extractDateFromHtml(html),
         };
       } else {
         page = await fetchPage(hit.url);
       }
-      console.log(`[digest]   ${hit.url}  textLen=${page.text.length}  img=${page.imageUrl ? "yes" : "no"}`);
+      console.log(
+        `[digest]   ${hit.url}  textLen=${page.text.length}  img=${page.imageUrl ? "yes" : "no"}  htmlDate=${page.publishedDate ?? "unknown"}`
+      );
       if (!page.text || page.text.length < 200) {
+        skipped++;
+        continue;
+      }
+
+      // Check date before calling the LLM to avoid wasting time/tokens on stale articles
+      if (
+        page.publishedDate &&
+        page.publishedDate !== bkkToday &&
+        page.publishedDate !== bkkYesterday
+      ) {
+        console.log(
+          `[digest]   -> SKIPPED (stale HTML date: ${page.publishedDate}, bkkToday=${bkkToday})`
+        );
         skipped++;
         continue;
       }
@@ -858,7 +911,6 @@ async function main() {
 
       // Check if the article is from today or yesterday (Bangkok time) to avoid stale news.
       // We allow null published_date since some daily sources don't provide explicit dates.
-      const { today: bkkToday, yesterday: bkkYesterday } = getBangkokDates();
       if (
         article.published_date &&
         article.published_date !== bkkToday &&

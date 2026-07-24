@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.61.0-jammy
-    timeout-minutes: 15
+    timeout-minutes: 30
 
     env:
       # Disable embedder network calls if the OpenAI key doesn't support them.
