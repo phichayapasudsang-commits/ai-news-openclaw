@@ -100,7 +100,7 @@ VOLUME ["/app/logs"]
 ENV TZ=Asia/Bangkok \
     NODE_ENV=production \
     RUN_ONCE=0 \
-    DIGEST_CRON="0 3 * * 1-5"
+    DIGEST_CRON="0 7 * * *"
 
 # tini = PID 1, reaps zombies; entrypoint handles RUN_ONCE vs cron mode.
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/entrypoint.sh"]
