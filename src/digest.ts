@@ -133,6 +133,16 @@ const openai = new OpenAI({
 // ---- helpers --------------------------------------------------
 type RawHit = { url: string; title: string };
 
+/** Get today and yesterday dates formatted as YYYY-MM-DD in Asia/Bangkok (UTC+7) */
+function getBangkokDates(): { today: string; yesterday: string } {
+  const now = new Date();
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  const bkk = new Date(utc + 3600000 * 7);
+  const today = bkk.toISOString().slice(0, 10);
+  const yesterday = new Date(bkk.getTime() - 86400000).toISOString().slice(0, 10);
+  return { today, yesterday };
+}
+
 /** Hostname of a URL, or "unknown" if the URL is malformed. */
 function safeHostname(url: string): string {
   try { return new URL(url).hostname; } catch { return "unknown"; }
@@ -729,6 +739,47 @@ async function insertArticle(a: Article): Promise<boolean | "skip-dup"> {
   }
 }
 
+/** Automatically delete articles older than target retention window (days) based on inserted_at */
+async function deleteOldArticles(days = 3): Promise<number> {
+  const url = process.env.SUPABASE_URL ?? "";
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+  if (!url || !key) return 0;
+
+  const now = new Date();
+  const todayUtc = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+  );
+  const cutoff = new Date(todayUtc);
+  cutoff.setUTCDate(cutoff.getUTCDate() - (days - 1));
+  const cutoffIso = cutoff.toISOString();
+
+  try {
+    // 1. Fetch old rows to delete
+    const selectRes = await fetch(
+      `${url}/rest/v1/articles?select=id&inserted_at=lt.${cutoffIso}`,
+      { headers: { apikey: key, Authorization: `Bearer ${key}` } }
+    );
+    if (!selectRes.ok) return 0;
+    const oldRows = (await selectRes.json()) as Array<{ id: number }>;
+    if (oldRows.length === 0) return 0;
+
+    // 2. Delete rows
+    const ids = oldRows.map((r) => r.id).join(",");
+    const delRes = await fetch(`${url}/rest/v1/articles?id=in.(${ids})`, {
+      method: "DELETE",
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+    });
+    if (!delRes.ok) {
+      console.warn(`[digest] delete old articles failed: ${delRes.status}`);
+      return 0;
+    }
+    return oldRows.length;
+  } catch (err) {
+    console.warn(`[digest] cleanup error:`, (err as Error).message);
+    return 0;
+  }
+}
+
 // ---- main -----------------------------------------------------
 async function main() {
   const startedAt = new Date();
@@ -804,6 +855,22 @@ async function main() {
         skipped++;
         continue;
       }
+
+      // Check if the article is from today or yesterday (Bangkok time) to avoid stale news.
+      // We allow null published_date since some daily sources don't provide explicit dates.
+      const { today: bkkToday, yesterday: bkkYesterday } = getBangkokDates();
+      if (
+        article.published_date &&
+        article.published_date !== bkkToday &&
+        article.published_date !== bkkYesterday
+      ) {
+        console.log(
+          `[digest]   -> SKIPPED (stale date: ${article.published_date}, bkkToday=${bkkToday})`
+        );
+        skipped++;
+        continue;
+      }
+
       const result = await insertArticle(article);
       if (result === true) {
         console.log(`[digest]   -> INSERTED  ${article.title_en.slice(0, 60)}`);
@@ -821,6 +888,10 @@ async function main() {
   console.log(
     `\n[digest] done  inserted=${inserted}  duped=${duped}  skipped=${skipped}  at=${new Date().toISOString()}`
   );
+
+  console.log(`\n[digest] running auto-cleanup (retaining 3 days)...`);
+  const deletedCount = await deleteOldArticles(3);
+  console.log(`[digest] cleanup done  deleted=${deletedCount} rows`);
 }
 
 // Only run main() when this file is executed directly. When imported
