@@ -1,11 +1,11 @@
 # =============================================================================
 # ai-news-agent - daily digest via GitHub Actions
 # =============================================================================
-# Runs `node dist/digest.js` on a cron schedule (03:00 UTC = 10:00 Asia/Bangkok,
-# MON-FRI). No VM required.
+# Runs `node dist/digest.js` on a cron schedule (00:00 UTC = 07:00 Asia/Bangkok,
+# daily). No VM required.
 #
 # Free quota: 2,000 min/month for private repos. This workflow uses ~3 min/run
-# x 22 business days = ~66 min/month.
+# x 30 days = ~90 min/month.
 #
 # Setup:
 #   1. Push this file to GitHub (already done).
@@ -25,9 +25,8 @@ name: Daily digest
 
 on:
   schedule:
-    # 03:00 UTC = 10:00 Asia/Bangkok (UTC+7, no DST)
-    # 1-5 = MON-FRI (both day-of-week interpretations work in GitHub)
-    - cron: '0 0 * * 1-5'
+    # 00:00 UTC = 07:00 Asia/Bangkok (Thailand time, UTC+7, no DST)
+    - cron: '0 0 * * *'
   workflow_dispatch: # allow manual runs from the Actions tab
     inputs:
       topic:
