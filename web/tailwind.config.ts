@@ -17,6 +17,17 @@ export default {
           "Roboto",
           "sans-serif",
         ],
+        display: [
+          "Plus Jakarta Sans",
+          "Noto Sans Thai",
+          "sans-serif",
+        ],
+        mono: [
+          "JetBrains Mono",
+          "ui-monospace",
+          "SFMono-Regular",
+          "monospace",
+        ],
       },
     },
   },

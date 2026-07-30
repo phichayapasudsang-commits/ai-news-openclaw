@@ -35,6 +35,50 @@ export function parseBullets(body: string): string[] {
     .filter((line) => line.length > 0);
 }
 
+export function parseSections(body: string) {
+  const result = {
+    executive: "",
+    highlights: [] as string[],
+    trends: [] as string[],
+  };
+  if (!body) return result;
+
+  let currentSection: "none" | "executive" | "highlights" | "trends" = "none";
+  const lines = body.split(/\r?\n/).map((l) => l.trim());
+
+  for (const line of lines) {
+    if (line === "[EXECUTIVE]") {
+      currentSection = "executive";
+      continue;
+    } else if (line === "[HIGHLIGHTS]") {
+      currentSection = "highlights";
+      continue;
+    } else if (line === "[TRENDS]") {
+      currentSection = "trends";
+      continue;
+    } else if (line.startsWith("[") && line.endsWith("]")) {
+      currentSection = "none";
+      continue;
+    }
+
+    if (currentSection === "executive") {
+      if (line) {
+        result.executive += (result.executive ? "\n" : "") + line;
+      }
+    } else if (currentSection === "highlights") {
+      if (line.startsWith("-") || line.startsWith("*") || line.startsWith("•")) {
+        result.highlights.push(line.replace(/^[-*•]\s*/, "").trim());
+      }
+    } else if (currentSection === "trends") {
+      if (line.startsWith("-") || line.startsWith("*") || line.startsWith("•")) {
+        result.trends.push(line.replace(/^[-*•]\s*/, "").trim());
+      }
+    }
+  }
+
+  return result;
+}
+
 /**
  * Shape a raw row into the UI model. Falls back to empty strings when
  * data is missing so downstream components never have to handle nulls.
@@ -44,8 +88,17 @@ export function toUINewsArticle(row: RawArticleRow): UINewsArticle {
     ? (row.category as Category)
     : "Research";
 
-  const highlightsEnRaw = parseBullets(row.body_en);
-  const highlightsThRaw = parseBullets(row.body_th);
+  const secEn = parseSections(row.body_en || "");
+  const secTh = parseSections(row.body_th || "");
+
+  const execEn = secEn.executive || row.summary_en || "";
+  const execTh = secTh.executive || row.summary_th || "";
+
+  const highlightsEnRaw = secEn.highlights.length > 0 ? secEn.highlights : parseBullets(row.body_en);
+  const highlightsThRaw = secTh.highlights.length > 0 ? secTh.highlights : parseBullets(row.body_th);
+
+  const trendsEn = secEn.trends;
+  const trendsTh = secTh.trends;
 
   return {
     id: row.id,
@@ -55,12 +108,14 @@ export function toUINewsArticle(row: RawArticleRow): UINewsArticle {
     publishedDate: row.published_date || "",
     summarizedTime: formatSummarizedTime(row.inserted_at),
     summarizedDate: formatSummarizedDate(row.inserted_at),
-    snippetEn: trimForSnippet(row.summary_en),
-    snippetTh: trimForSnippet(row.summary_th),
-    executiveSummaryEn: row.summary_en || "",
-    executiveSummaryTh: row.summary_th || "",
+    snippetEn: trimForSnippet(execEn),
+    snippetTh: trimForSnippet(execTh),
+    executiveSummaryEn: execEn,
+    executiveSummaryTh: execTh,
     keyHighlightsEn: highlightsEnRaw.map(toHighlight),
     keyHighlightsTh: highlightsThRaw.map(toHighlight),
+    trendsOverviewEn: trendsEn,
+    trendsOverviewTh: trendsTh,
     originalSourceUrl: row.original_url || undefined,
     imageUrl: row.image_url ?? undefined,
   };

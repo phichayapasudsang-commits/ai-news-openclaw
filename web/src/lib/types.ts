@@ -52,6 +52,8 @@ export interface UINewsArticle {
   executiveSummaryTh: string;
   keyHighlightsEn: HighlightBullet[];
   keyHighlightsTh: HighlightBullet[];
+  trendsOverviewEn: string[];
+  trendsOverviewTh: string[];
   originalSourceUrl?: string;
   imageUrl?: string | null;
 }
