@@ -26,6 +26,7 @@
  */
 import "dotenv/config";
 
+import { supabaseArticleTool } from "./tools.js";
 import {
   researcherAgent,
   deduplicatorAgent,
@@ -175,6 +176,19 @@ export async function runPipeline(
   log(`5/5 QA: validating and inserting ...`);
   const qa = await qaAgent.run({ articles: edited });
   log(`   inserted=${qa.inserted} rejected=${qa.rejected.length}`);
+
+  // ---- Cleanup: Delete older articles ----------------------------
+  log("Cleanup: deleting articles older than 3 days ...");
+  try {
+    const cleanup = await supabaseArticleTool.deleteOlderArticles(3);
+    if (cleanup.error) {
+      log(`   cleanup failed: ${cleanup.error}`);
+    } else {
+      log(`   cleanup success: deleted ${cleanup.deleted} old article(s)`);
+    }
+  } catch (err) {
+    log(`   cleanup error: ${err instanceof Error ? err.message : String(err)}`);
+  }
 
   return {
     topics,

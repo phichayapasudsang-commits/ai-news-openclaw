@@ -427,6 +427,24 @@ export const supabaseArticleTool = {
       .map((r) => ({ url: r.original_url, message: "row not echoed by PostgREST" }));
     return { inserted, errors };
   },
+
+  async deleteOlderArticles(daysToKeep = 3): Promise<{ deleted: number; error?: string }> {
+    const sb = getClient();
+    const threshold = new Date();
+    threshold.setDate(threshold.getDate() - daysToKeep);
+    const isoThreshold = threshold.toISOString();
+
+    const { data, error } = await sb
+      .from("articles")
+      .delete()
+      .lt("inserted_at", isoThreshold)
+      .select("id");
+
+    if (error) {
+      return { deleted: 0, error: error.message };
+    }
+    return { deleted: data?.length ?? 0 };
+  },
 };
 
 // ===============================================================
